@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Weather API Data</title>
+</head>
+<body>
+<h1>Weather API Data </h1>
+<div id="weather-results"></div>
+<p>I don't remember what these timestamps are :/</p>
+<p id="out1"></p>
+<p id="out2"></p>
+<p id="out3"></p>
+<p id="out4"></p>
+<p id="demo"></p>
+<p id="demo1"></p>
+<p id="formattime"></p>
+<p id="forloop"></p>
+<p id="forloop2"></p>
+
+<script>
+function renderWeather(w) {
+	console.log(w);
+	var resultsContainer = document.querySelector("#weather-results");
+	var city = document.createElement("h2");
+	city.textContent = w.city.name + " " +w.city.country;
+	resultsContainer.append(city);
+	
+	var forecast = "Weather: " + w.list[0].weather[0].main;
+	document.getElementById("out1").innerHTML = forecast;
+	
+	var apitime = "ApiTime: " + w.list[0].dt_txt;
+	document.getElementById("out2").innerHTML = apitime;
+	
+    var Utime =  + w.list[1].dt;
+	document.getElementById("out3").innerHTML = Utime;
+    
+    let Utime2 = w.list[0].dt;
+    document.getElementById("out4").innerHTML = Utime2;
+    
+    var myutime =  Math.floor(Date.now() / 1000)
+	document.getElementById("demo").innerHTML = "Current Unix time: " + myutime  ;
+	document.getElementById("demo1").innerHTML = (Utime2 - (myutime+3600)) + " " + (Utime2 - (myutime+3600))/3600;
+    
+    let text = "";
+    for (let i = 0; i < 40; i++) {
+  	text +=  w.list[i].dt_txt  + " --- " + (w.list[i].weather[0].main) + "<br>";
+	}
+
+	document.getElementById("forloop").innerHTML = text;
+    
+    let text2 = "";
+    for (let i = 0; i < 40; i++) {
+  	text2 += "";
+	}
+
+	document.getElementById("forloop2").innerHTML = text2;
+    
+}
+
+function fetchWeather(query) {
+	var url = "https://api.openweathermap.org/data/2.5/forecast?q=Peterborough,uk&units=metric&appid=dc10fe5e512164299ea34d60b8260d8e"
+	fetch(url)
+  	.then((response) => response.json())
+  	.then((data) => renderWeather(data));
+
+}
+
+fetchWeather();
+
+var unixTime = Math.floor(Date.now() / 1000);
+let unix_timestamp = unixTime
+var date = new Date(unix_timestamp * 1000);
+var hours = date.getHours();
+var minutes = "0" + date.getMinutes();
+var seconds = "0" + date.getSeconds();
+var myformatTime = date.toDateString() + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+document.getElementById("formattime").innerHTML = myformatTime;
+
+</script>
+</body>
+</html>
